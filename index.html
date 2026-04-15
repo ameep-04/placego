@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>PlaceGo | Data-Driven & Intelligent Software Solutions</title>
+  <!-- Google Fonts + Font Awesome + Chart.js -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #f9f5ff 0%, #eef2ff 100%);
+      color: #1e1b2f;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* premium gradient background with soft pink/blue */
+    .bg-soft-gradient {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: radial-gradient(circle at 10% 20%, rgba(255, 210, 230, 0.4), rgba(200, 220, 255, 0.6));
+    }
+
+    /* glassmorphism refined */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(14px);
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    .glass-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 28px 40px -16px rgba(0, 102, 255, 0.2);
+      border-color: rgba(0, 112, 243, 0.3);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    /* buttons premium */
+    .btn-primary {
+      background: linear-gradient(105deg, #0066ff, #a855f7);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 12px 32px;
+      border-radius: 40px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 24px rgba(0, 102, 255, 0.4);
+      background: linear-gradient(105deg, #0055dd, #9b4dff);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid #0066ff;
+      color: #0066ff;
+      font-weight: 600;
+      padding: 12px 32px;
+      border-radius: 40px;
+      transition: 0.25s;
+      cursor: pointer;
+    }
+    .btn-outline:hover {
+      background: rgba(0, 102, 255, 0.08);
+      border-color: #a855f7;
+      color: #a855f7;
+      transform: translateY(-2px);
+    }
+
+    /* navbar clean */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 5%;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: 0.2s;
+    }
+    .logo h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #1e3c72, #2b3b8f, #aa5eff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .logo span {
+      font-size: 0.75rem;
+      color: #5a4f8f;
+      font-weight: 500;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      color: #2d3a6e;
+      transition: 0.2s;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover {
+      color: #0066ff;
+    }
+    .hamburger {
+      display: none;
+      font-size: 1.7rem;
+      cursor: pointer;
+      color: #2d3a6e;
+    }
+
+    /* hero area */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 3rem;
+      padding: 2rem 0;
+    }
+    .hero-content {
+      flex: 1.2;
+    }
+    .hero h1 {
+      font-size: 3.6rem;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(125deg, #0b2b5c, #4f46e5, #db2777);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      margin: 1.5rem 0;
+      color: #2d3a5e;
+      line-height: 1.4;
+    }
+    .tech-icons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .tech-badge {
+      background: white;
+      padding: 8px 20px;
+      border-radius: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .tech-badge i {
+      font-size: 1.3rem;
+      color: #2b6eff;
+    }
+
+    /* service cards - only icon and title, no description/button */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .service-card {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+      padding: 2rem 1.5rem;
+      border-radius: 36px;
+      transition: all 0.3s;
+      border: 1px solid rgba(255,255,240,0.7);
+      text-align: center;
+    }
+    .service-card i {
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, #0066ff, #dd55ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+    .service-card h3 {
+      font-size: 1.4rem;
+      margin: 0.8rem 0 0;
+      color: #111827;
+      font-weight: 600;
+    }
+    /* no description, no button */
+
+    /* about + chart */
+    .about-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3rem;
+      align-items: center;
+    }
+    .chart-container {
+      flex: 1;
+      background: rgba(255,255,245,0.6);
+      backdrop-filter: blur(6px);
+      padding: 1.5rem;
+      border-radius: 32px;
+      box-shadow: 0 12px 28px -10px rgba(0,0,0,0.05);
+    }
+
+    /* tech stack items */
+    .tech-stack-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .tech-item {
+      background: white;
+      padding: 0.9rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 600;
+      box-shadow: 0 5px 14px rgba(0,0,0,0.02);
+      transition: 0.2s;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tech-item i {
+      font-size: 1.8rem;
+      color: #2b6eff;
+    }
+
+    /* why choose us */
+    .why-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+    .why-card {
+      background: white;
+      padding: 2rem 1.8rem;
+      border-radius: 32px;
+      width: 260px;
+      text-align: center;
+      box-shadow: 0 15px 35px -12px rgba(0,0,0,0.05);
+      transition: 0.2s;
+      border-bottom: 3px solid #818cf8;
+    }
+
+    /* contact */
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .contact-form {
+      flex: 1;
+      background: white;
+      padding: 2rem;
+      border-radius: 36px;
+      box-shadow: 0 20px 35px -10px rgba(0,0,0,0.05);
+    }
+    .contact-form input, .contact-form textarea {
+      width: 100%;
+      padding: 14px 20px;
+      margin: 12px 0;
+      background: #f8faff;
+      border: 1px solid #e0e7ff;
+      border-radius: 60px;
+      font-family: 'Inter', sans-serif;
+      transition: 0.2s;
+    }
+    .contact-form input:focus, .contact-form textarea:focus {
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+    }
+    .map-area {
+      flex: 1;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 16px 32px -12px rgba(0,0,0,0.08);
+    }
+    footer {
+      background: #ffffffd9;
+      backdrop-filter: blur(12px);
+      padding: 3rem 5% 1.5rem;
+      border-top: 1px solid #eef2ff;
+    }
+    .section-title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      background: linear-gradient(125deg, #1e3a8a, #6b21a5);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+    }
+    @media (max-width: 860px) {
+      .nav-links {
+        display: none;
+      }
+      .hamburger {
+        display: block;
+      }
+      .nav-links.active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 75px;
+        left: 0;
+        width: 100%;
+        background: rgba(255,255,245,0.98);
+        backdrop-filter: blur(20px);
+        padding: 2rem;
+        gap: 1.5rem;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+      }
+      section {
+        padding: 60px 5%;
+      }
+    }
+    section {
+      padding: 80px 5%;
+    }
+    .glow-text {
+      font-weight: 700;
+      color: #2563eb;
+    }
+  </style>
+</head>
+<body>
+<div class="bg-soft-gradient"></div>
+
+<nav class="navbar">
+  <div class="logo">
+    <h1>PlaceGo</h1>
+    <span>Data-Driven & Software Innovation</span>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#tech">Tech Stack</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home">
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Transforming Businesses with Data & Intelligent Technology</h1>
+      <p>PlaceGo — modern data-driven & software development company based in Jaipur, India. We build AI-first platforms, cloud-native analytics, and scalable enterprise solutions.</p>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Started</button>
+        <button class="btn-outline" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact Us</button>
+      </div>
+      <div class="tech-icons">
+        <div class="tech-badge"><i class="fab fa-microsoft"></i> Azure</div>
+        <div class="tech-badge"><i class="fas fa-database"></i> Databricks</div>
+        <div class="tech-badge"><i class="fab fa-python"></i> Python</div>
+        <div class="tech-badge"><i class="fas fa-brain"></i> AI/ML</div>
+        <div class="tech-badge"><i class="fas fa-cloud-upload-alt"></i> Data Engineering</div>
+      </div>
+    </div>
+    <div style="flex:0.7; min-width: 200px; text-align:center;">
+      <div style="background: radial-gradient(circle at 30% 40%, rgba(0,102,255,0.1), transparent); padding: 20px; border-radius: 48px;">
+        <i class="fas fa-chart-network" style="font-size: 5rem; color: #3b82f6;"></i>
+        <p style="margin-top: 15px; font-weight: 500;">Real-time intelligence | AI-driven</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about">
+  <h2 class="section-title">About PlaceGo</h2>
+  <div class="about-flex">
+    <div class="about-text">
+      <p style="font-size:1.1rem; margin-bottom: 1.2rem;">Founded in <strong class="glow-text">2024</strong> in Jaipur, PlaceGo is a next-gen software engineering and data analytics firm. We combine modern cloud ecosystems (Azure, Databricks) with cutting-edge AI to drive digital transformation.</p>
+      <div style="margin: 2rem 0;">
+        <h3><i class="fas fa-bullseye" style="color:#2563eb;"></i> Mission</h3>
+        <p>Deliver scalable data and AI solutions that empower enterprises to unlock hidden potential and drive growth.</p>
+        <h3 style="margin-top: 1.5rem;"><i class="fas fa-eye" style="color:#2563eb;"></i> Vision</h3>
+        <p>Become a leading data-first tech company, redefining automation, intelligence, and enterprise resilience globally.</p>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="growthChart" width="400" height="240" style="width:100%; max-height:240px;"></canvas>
+      <p style="text-align:center; margin-top:12px; font-size:0.8rem; color:#2c3e66;">📈 Data-driven growth trajectory (2024-2026)</p>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section: Only icons + titles, no descriptions/buttons, added dev services -->
+<section id="services">
+  <h2 class="section-title">Our Expertise</h2>
+  <div class="services-grid">
+    <!-- Data & AI services -->
+    <div class="service-card"><i class="fas fa-database"></i><h3>Data Engineering</h3></div>
+    <div class="service-card"><i class="fas fa-microchip"></i><h3>AI / Machine Learning</h3></div>
+    <div class="service-card"><i class="fas fa-code-branch"></i><h3>Application Modernization</h3></div>
+    <div class="service-card"><i class="fas fa-chart-pie"></i><h3>Enterprise Data Analytics</h3></div>
+    <div class="service-card"><i class="fas fa-shield-alt"></i><h3>Cloud Infrastructure & Security</h3></div>
+    <div class="service-card"><i class="fas fa-plug"></i><h3>Enterprise Integration</h3></div>
+    <div class="service-card"><i class="fas fa-chart-line"></i><h3>Business Intelligence</h3></div>
+    <div class="service-card"><i class="fas fa-rocket"></i><h3>Accelerators</h3></div>
+    <!-- New development-related services added -->
+    <div class="service-card"><i class="fab fa-react"></i><h3>Web & Mobile App Development</h3></div>
+    <div class="service-card"><i class="fas fa-cloud-upload-alt"></i><h3>Cloud-Native Development</h3></div>
+    <div class="service-card"><i class="fas fa-shield-virus"></i><h3>DevSecOps & CI/CD</h3></div>
+    <div class="service-card"><i class="fas fa-microservice"></i><h3>Microservices Architecture</h3></div>
+    <div class="service-card"><i class="fas fa-code"></i><h3>Custom Software Development</h3></div>
+    <div class="service-card"><i class="fas fa-mobile-alt"></i><h3>Cross-Platform Engineering</h3></div>
+    <div class="service-card"><i class="fas fa-server"></i><h3>Legacy System Migration</h3></div>
+    <div class="service-card"><i class="fas fa-cubes"></i><h3>Low-Code & Rapid Prototyping</h3></div>
+  </div>
+</section>
+
+<!-- Technologies Section -->
+<section id="tech">
+  <h2 class="section-title">Modern Technology Stack</h2>
+  <p style="text-align:center; margin-bottom: 2rem; color:#2d3a5e;">Powered by industry-leading cloud & AI ecosystems</p>
+  <div class="tech-stack-grid">
+    <div class="tech-item"><i class="fab fa-microsoft"></i> Microsoft Azure</div>
+    <div class="tech-item"><i class="fas fa-database"></i> Databricks</div>
+    <div class="tech-item"><i class="fab fa-python"></i> Python</div>
+    <div class="tech-item"><i class="fas fa-chart-network"></i> Apache Spark</div>
+    <div class="tech-item"><i class="fas fa-robot"></i> TensorFlow/PyTorch</div>
+    <div class="tech-item"><i class="fas fa-cloud"></i> Azure ML & AI</div>
+    <div class="tech-item"><i class="fas fa-code"></i> Kubernetes</div>
+    <div class="tech-item"><i class="fas fa-chart-simple"></i> Power BI / Tableau</div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section>
+  <h2 class="section-title">Why Choose PlaceGo?</h2>
+  <div class="why-cards">
+    <div class="why-card"><i class="fas fa-chart-line" style="font-size:2rem; color:#2563eb;"></i><h3>Data-Driven DNA</h3><p>Every decision backed by analytics and insights.</p></div>
+    <div class="why-card"><i class="fas fa-expand-alt" style="font-size:2rem; color:#2563eb;"></i><h3>Scalable Architecture</h3><p>Grow without limits with cloud-native design.</p></div>
+    <div class="why-card"><i class="fas fa-lock" style="font-size:2rem; color:#2563eb;"></i><h3>Enterprise Security</h3><p>Compliance-first, zero-trust frameworks.</p></div>
+    <div class="why-card"><i class="fas fa-rocket" style="font-size:2rem; color:#2563eb;"></i><h3>Innovation at Speed</h3><p>Agile delivery, AI accelerators & modern tooling.</p></div>
+  </div>
+</section>
+
+<!-- Contact + Map -->
+<section id="contact">
+  <h2 class="section-title">Let’s Connect</h2>
+  <div class="contact-row">
+    <div class="contact-form">
+      <h3 style="margin-bottom: 1rem;">Send us a message</h3>
+      <form id="contactForm">
+        <input type="text" placeholder="Full Name" required id="name">
+        <input type="email" placeholder="Email Address" required id="email">
+        <input type="tel" placeholder="Phone Number">
+        <textarea rows="4" placeholder="How can we help?"></textarea>
+        <button type="submit" class="btn-primary" style="width:100%; border:none;">Send Message <i class="fas fa-paper-plane"></i></button>
+      </form>
+      <p style="margin-top: 1.5rem;"><i class="fas fa-map-marker-alt" style="color:#2563eb;"></i> <strong>Office:</strong> 8/356, Sector 8, Malviya Nagar, Jaipur, Rajasthan - 302017</p>
+    </div>
+    <div class="map-area">
+      <iframe src="https://maps.google.com/maps?q=8/356%20Sector%208%20Malviya%20Nagar%2C%20Jaipur&output=embed" width="100%" height="320" style="border:0; border-radius: 28px;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+    <div>
+      <h3 style="font-size: 1.8rem; background: linear-gradient(135deg,#1e3c72,#aa5eff); -webkit-background-clip:text; background-clip:text; color:transparent;">PlaceGo</h3>
+      <p>Modern Data-Driven & Software Development Company</p>
+      <p><i class="fas fa-phone-alt"></i> +91-141-456-7890</p>
+      <p><i class="fas fa-envelope"></i> hello@placego.ai</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul style="list-style:none; line-height:2;"><li><a href="#home" style="color:#2c3e66;">Home</a></li><li><a href="#about" style="color:#2c3e66;">About</a></li><li><a href="#services" style="color:#2c3e66;">Services</a></li><li><a href="#tech" style="color:#2c3e66;">Technologies</a></li><li><a href="#contact" style="color:#2c3e66;">Contact</a></li></ul>
+    </div>
+    <div>
+      <h4>Jaipur HQ</h4>
+      <p>8/356, Sector 8, Malviya Nagar, Jaipur, India</p>
+      <div style="margin-top:12px; font-size: 1.4rem;"><i class="fab fa-linkedin"></i> <i class="fab fa-twitter"></i> <i class="fab fa-github"></i></div>
+    </div>
+  </div>
+  <hr style="border-color:#d9e2ef; margin: 2rem 0 1rem;">
+  <p style="text-align:center; font-size:0.8rem;">© 2025 PlaceGo — Innovating with Data & AI. Established 2024 in Jaipur.</p>
+</footer>
+
+<script>
+  // mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+  });
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => navLinks.classList.remove('active'));
+  });
+
+  // chart.js light gradient line
+  const ctx = document.getElementById('growthChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['2024', '2025', '2026 (projected)'],
+      datasets: [{
+        label: 'AI & Data Solutions Impact',
+        data: [45, 85, 140],
+        borderColor: '#4f46e5',
+        backgroundColor: 'rgba(79, 70, 229, 0.08)',
+        tension: 0.3,
+        fill: true,
+        pointBackgroundColor: '#a855f7',
+        pointBorderColor: '#fff',
+        pointRadius: 5,
+        borderWidth: 2.5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { labels: { color: '#1f2937' } }
+      },
+      scales: {
+        y: { grid: { color: '#e2e8f0' }, ticks: { color: '#334155' } },
+        x: { ticks: { color: '#334155' } }
+      }
+    }
+  });
+
+  // contact form
+  const contactForm = document.getElementById('contactForm');
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    if(name) alert(`✨ Thanks ${name}! PlaceGo team will reach out soon.`);
+    else alert('Please enter your name.');
+    contactForm.reset();
+  });
+
+  // subtle particle network (light tech vibe)
+  const canvas = document.createElement('canvas');
+  canvas.style.position = 'fixed';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  canvas.style.pointerEvents = 'none';
+  canvas.style.zIndex = '-1';
+  canvas.style.opacity = '0.25';
+  document.body.appendChild(canvas);
+  const ctxParticles = canvas.getContext('2d');
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+  let particles = [];
+  const PARTICLE_COUNT = 45;
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.2,
+      radius: 1.5 + Math.random() * 2
+    });
+  }
+  function drawParticles() {
+    if (!ctxParticles) return;
+    ctxParticles.clearRect(0, 0, canvas.width, canvas.height);
+    for (let p of particles) {
+      ctxParticles.beginPath();
+      ctxParticles.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctxParticles.fillStyle = '#6c5ce7';
+      ctxParticles.shadowBlur = 4;
+      ctxParticles.fill();
+      for (let other of particles) {
+        const dx = p.x - other.x, dy = p.y - other.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 100 && dist > 0) {
+          ctxParticles.beginPath();
+          ctxParticles.moveTo(p.x, p.y);
+          ctxParticles.lineTo(other.x, other.y);
+          ctxParticles.strokeStyle = `rgba(100, 80, 220, ${0.12 * (1 - dist/100)})`;
+          ctxParticles.lineWidth = 0.6;
+          ctxParticles.stroke();
+        }
+      }
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+    }
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+</script>
+</body>
+</html>
